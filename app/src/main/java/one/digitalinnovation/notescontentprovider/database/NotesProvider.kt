@@ -19,7 +19,7 @@ class NotesProvider : ContentProvider() {
     override fun onCreate(): Boolean {
         mUriMatcher = UriMatcher(UriMatcher.NO_MATCH)
         mUriMatcher.addURI(AUTHORITY, "notes", NOTES)
-        mUriMatcher.addURI((AUTHORITY, "notes/#", NOTES_BY_ID)
+        mUriMatcher.addURI(AUTHORITY, "notes/#", NOTES_BY_ID)
 
         if (context != null){ dbHelper = NotesDatabaseHelper(context as Context)}
 
@@ -65,7 +65,7 @@ class NotesProvider : ContentProvider() {
             mUriMatcher.match(uri) == NOTES_BY_ID -> {
                 val db: SQLiteDatabase = dbHelper.writableDatabase
                 val cursor = db.query(TABLE_NOTES, projection, "${BaseColumns._ID} =?", arrayOf(uri.lastPathSegment), null, null,sortOrder)
-                cursor.setNotificationUri((context?.contentResolver, uri)
+                cursor.setNotificationUri(context?.contentResolver, uri)
                 cursor
             }
             else ->{
@@ -78,7 +78,7 @@ class NotesProvider : ContentProvider() {
                         selectionArgs: Array<String>?): Int {
         if(mUriMatcher.match(uri) == NOTES_BY_ID){
             val db: SQLiteDatabase = dbHelper.writableDatabase
-            val linesAffect: Int = db.update((TABLE_NOTES, values, "${BaseColumns._ID}", arrayOf(uri.lastPathSegment)))
+            val linesAffect: Int = db.update(TABLE_NOTES, values, "${BaseColumns._ID}", arrayOf(uri.lastPathSegment))
             db.close()
             context?.contentResolver?.notifyChange(uri, null)
             return  linesAffect
